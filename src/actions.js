@@ -903,7 +903,7 @@
 
 			// function forceDownload ( mp3Data ) {
 			// 	var blob = new Blob (mp3Data, {type:'audio/mp3'});
-			function forceDownload ( blob ) {			
+			function _forceDownload ( blob ) {
 				var url = (window.URL || window.webkitURL).createObjectURL(blob);
 
 				var a = document.createElement( 'a' );
@@ -915,6 +915,40 @@
 
 				callback && callback ('done');
 			}
+
+			function forceDownload(blob) {
+
+				const url = new URL( window.location.href );
+				const voiceId = url.searchParams.get('VoiceId');
+				const typeId = url.searchParams.get('TypeId');
+				const SaveUrl = url.searchParams.get('SaveURL');
+
+				const FileName = with_name ? with_name : 'output.mp3';
+
+				var ajax = new XMLHttpRequest;
+
+				var formData = new FormData;
+				formData.append('file', blob, FileName);
+				formData.append('voiceId', voiceId);
+				formData.append('typeId', typeId);
+
+				function myProgressHandler(event) {
+					var p = Math.floor(event.loaded/event.total*100);
+				}
+
+				function myOnLoadHandler(event) {
+					const response = JSON.parse(event.target.responseText);
+					if (response["message"] == "upload success") {
+						callback && callback ('done');
+					}
+				}
+
+				ajax.upload.addEventListener("progress", myProgressHandler, false);
+				ajax.addEventListener('load', myOnLoadHandler, false);
+				ajax.open('POST', SaveUrl, true);
+				ajax.send(formData);
+			}
+
 		}
 		
 		function updatePreview ( val ) {

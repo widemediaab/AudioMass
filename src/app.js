@@ -77,7 +77,12 @@
 					});
 				});
 			}
-
+			const url = new URL( window.location.href );
+			const value = url.searchParams.get('LoadURL');
+			if (value) {
+				// app.engine.LoadURL ( value );
+				q.engine.LoadURL ( value );
+			}
 			return (q);
 		};
 

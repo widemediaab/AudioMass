@@ -268,6 +268,11 @@
 												}
 									  		}, false);
 
+									  		const url = new URL( window.location.href );
+								            const value = url.searchParams.get('FileName');
+								            var _inp = document.getElementById('k0');
+								            _inp.value = value;
+
 										},20);
 								  }
 								}).Show();
